@@ -846,20 +846,21 @@ def test_transform_intents_for_file_default():
 
 
 def test_transform_intents_for_files_with_entities():
-    domain_path = "data/test_domains/test_domain_from_directory2"
+    domain_path = "data/test_domains/test_domain_from_directory_for_entities"
     domain = Domain.load(domain_path)
     transformed = domain._transform_intents_for_file()
 
     expected = [
-        {"question": {"use_entities": True}},
         {"play": {"use_entities": ["ball", "chess"]}},
         {"stow_away": {"use_entities": True}},
+        {"question": {"use_entities": True}},
         {
-            "support_banning": {
-                "use_entities": ["anti_person_land_mines", "automatic_rifles"]
+            "support_encouraging": {
+                "use_entities": ["anti_freeze_blankets", "automatic_cupcakes"]
             }
         },
         {"certify": {"use_entities": True}},
+        {"vacationing": {"ignore_entities": ["tornadoes"]}},
     ]
 
     assert transformed == expected
@@ -1475,4 +1476,4 @@ def test_domain_invalid_yml_in_folder():
     Check if invalid YAML files in a domain folder lead to the proper UserWarning
     """
     with pytest.warns(UserWarning, match="The file .* your file\\."):
-        Domain.from_directory("data/test_domains/test_domain_from_directory1/")
+        Domain.from_directory("data/test_domains/test_domain_from_directory/")

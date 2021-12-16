@@ -1563,12 +1563,15 @@ class Domain:
             if len(use_entities) == len(self.entities):
                 intent_props[USE_ENTITIES_KEY] = True
             elif len(use_entities) <= len(self.entities) / 2:
-                intent_props[USE_ENTITIES_KEY] = list(use_entities)
+                entities = list(use_entities)
+                entities.sort()
+                intent_props[USE_ENTITIES_KEY] = entities
             else:
-                intent_props[IGNORE_ENTITIES_KEY] = list(ignore_entities)
+                entities = list(ignore_entities)
+                entities.sort()
+                intent_props[IGNORE_ENTITIES_KEY] = entities
             intent_props.pop(USED_ENTITIES_KEY)
             intents_for_file.append({intent_name: intent_props})
-
         return intents_for_file
 
     def _transform_entities_for_file(self) -> List[Union[Text, Dict[Text, Any]]]:
