@@ -348,22 +348,6 @@ class Domain:
         def merge_lists(list1: List[Any], list2: List[Any]) -> List[Any]:
             return sorted(list(set(list1 + list2)))
 
-        def merge_lists_of_dicts(
-            dict_list1: List[Dict],
-            dict_list2: List[Dict],
-            override_existing_values: bool = False,
-        ) -> List[Dict]:
-            dict1 = {
-                (sorted(list(i.keys()))[0] if isinstance(i, dict) else i): i
-                for i in dict_list1
-            }
-            dict2 = {
-                (sorted(list(i.keys()))[0] if isinstance(i, dict) else i): i
-                for i in dict_list2
-            }
-            merged_dicts = merge_dicts(dict1, dict2, override_existing_values)
-            return list(merged_dicts.values())
-
         if override:
             config = domain_dict["config"]
             for key, val in config.items():
@@ -372,9 +356,10 @@ class Domain:
         if override or domain1.get("session_config") == SessionConfig.default():
             combined[SESSION_CONFIG_KEY] = domain_dict[SESSION_CONFIG_KEY]
 
-        combined[KEY_INTENTS] = merge_lists_of_dicts(
-            combined[KEY_INTENTS], domain_dict[KEY_INTENTS], override
-        )
+        if combined.get(KEY_INTENTS):
+            combined[KEY_INTENTS].extend(domain_dict[KEY_INTENTS])
+        else:
+            combined[KEY_INTENTS] = domain_dict[KEY_INTENTS]
 
         # remove existing forms from new actions
         for form in combined.get(KEY_FORMS, []):

@@ -841,9 +841,6 @@ def test_transform_intents_for_files_with_entities():
     transformed = domain._transform_intents_for_file()
 
     expected = [
-        {"play": {"use_entities": ["ball", "chess"]}},
-        {"stow_away": {"use_entities": True}},
-        {"question": {"use_entities": True}},
         {
             "support_encouraging": {
                 "use_entities": ["anti_freeze_blankets", "automatic_cupcakes"]
@@ -851,9 +848,18 @@ def test_transform_intents_for_files_with_entities():
         },
         {"certify": {"use_entities": True}},
         {"vacationing": {"ignore_entities": ["tornadoes"]}},
+        {"question": {"use_entities": True}},
+        {"play": {"use_entities": ["ball", "chess"]}},
+        {"stow_away": {"use_entities": True}},
     ]
 
     assert transformed == expected
+
+
+def test_directory_with_conflicting_intent_props():
+    domain_path = "data/test_domains/test_directory_with_conflicting_intent_props"
+    with pytest.raises(InvalidDomain):
+        Domain.load(domain_path)
 
 
 def test_transform_intents_for_file_with_mapping():

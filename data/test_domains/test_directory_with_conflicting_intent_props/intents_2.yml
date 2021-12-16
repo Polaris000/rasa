@@ -1,0 +1,17 @@
+version: "2.0"
+
+intents:
+  - suspend:
+      use_entities:
+        - tea
+        - coffee
+  - classify:
+      use_entities: true
+  - rescueing:
+      ignore_entities:
+        - cyclones
+
+entities:
+  - tea
+  - coffee
+  - cyclones
