@@ -1,7 +1,4 @@
 version: "2.0"
-session_config:
-  session_expiration_time: 360
-  carry_over_slots_to_new_session: true
 
 intents:
 - bot_challenge
@@ -22,3 +19,7 @@ actions:
 - utter_bot_challenge
 - utter_im_here
 - utter_smalltalk_greeting
+
+responses:
+  utter_amazement:
+    - text: awesomness!

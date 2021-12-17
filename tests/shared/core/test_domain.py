@@ -677,9 +677,154 @@ def test_domain_from_multiple_files():
     domain_path = "data/test_domains/test_domain_from_multiple_files"
     domain = Domain.load(domain_path)
 
-    expected_intents = []
+    expected_intents = [
+        "affirm",
+        "are_you_there",
+        "back",
+        "bot_challenge",
+        "cure_network",
+        "delay",
+        "deny",
+        "device_selection_scaffold",
+        "drum_clocks",
+        "drum_lampshades",
+        "drum_robot",
+        "drum_robot_chocolate",
+        "drum_soups",
+        "drum_wallets",
+        "endless_love",
+        "exchange_wallet",
+        "finish_humble_selection",
+        "finish_selection",
+        "finish_selection_line",
+        "greeting",
+        "humble_selection",
+        "humble_selection_scaffold",
+        "main_menu",
+        "nlu_fallback",
+        "open_wallet",
+        "out_of_scope",
+        "profanity",
+        "restart",
+        "run_finish",
+        "run_finish_recent",
+        "run_finished",
+        "selection_troubleshooting",
+        "self_selection",
+        "session_start",
+        "thanks",
+        "unsure_selection_scaffold",
+        "view_offers",
+    ]
+    expected_entities = [
+        "caramel_robot",
+        "chocolate_robot",
+        "other_robot",
+        "pistachio_robot",
+        "rum_and_raisin_robot",
+        "strawberry_robot",
+        "vanilla_robot",
+    ]
+    expected_actions = [
+        "action_increase_15",
+        "action_prevent_20",
+        "action_utter_cure_standard",
+        "action_utter_drum_menu",
+        "action_utter_main_menu",
+        "action_utter_previous_message",
+        "action_utter_robot_menu",
+        "action_utter_smalltalk_greeting",
+        "utter_anythingelse_menu",
+        "utter_bot_challenge",
+        "utter_cure_specific",
+        "utter_cure_standard",
+        "utter_drumclocks",
+        "utter_drumlampshades",
+        "utter_drumsoups",
+        "utter_drumwallets",
+        "utter_finish_humble_selection",
+        "utter_finish_selection",
+        "utter_finish_selection_line",
+        "utter_greengrey_wallet",
+        "utter_horn_selection_scaffold",
+        "utter_humble_selection",
+        "utter_humble_selection_scaffold",
+        "utter_im_here",
+        "utter_non_standard",
+        "utter_open_wallet_options",
+        "utter_profanity",
+        "utter_run_finish",
+        "utter_run_finish_recent",
+        "utter_run_finished",
+        "utter_selection_issues",
+        "utter_smalltalk_greeting",
+        "utter_std_drum_menu",
+        "utter_thanks_response",
+        "utter_tmo_love",
+        "utter_amazement",
+        "utter_default",
+        "utter_goodbye",
+        "utter_greet",
+    ]
+    expected_forms = {
+        "robot_form": {
+            "required_slots": {
+                "propose_simulation": [
+                    {"type": "from_entity", "entity": "propose_simulation"}
+                ],
+                "display_cure_method": [
+                    {"type": "from_entity", "entity": "display_cure_method"}
+                ],
+            }
+        }
+    }
+    expected_responses = {
+        "utter_greet": [{"text": "hey there!"}],
+        "utter_goodbye": [{"text": "goodbye :("}],
+        "utter_default": [{"text": "default message"}],
+        "utter_amazement": [{"text": "awesomness!"}],
+    }
+    expected_slots = [
+        "humbleSelection",
+        "humbleSelectionManagement",
+        "humbleSelectionStatus",
+        "greenOrGrey",
+        "activate_simulation",
+        "activate_double_simulation",
+        "drumChocolateWallets",
+        "drumStrawberryWallets",
+        "drumOtherWallets",
+        "drumSnareWallets",
+        "drumClockCovers",
+        "drumClockAdapters",
+        "drumMindspace",
+        "drumAllLampshades",
+        "drumSoupChocolate",
+        "drumSoupStrawberry",
+        "drumAllSoups",
+        "drumClocksChocolate",
+        "drumClocksStrawberry",
+        "drumAllClocks",
+        "offers",
+        "display_method_artwork",
+        "display_cure_method",
+        "display_drum_cure_horns",
+        "requested_slot",
+        "session_started_metadata",
+    ]
+    domain_slots = []
+
+    for slot in domain.slots:
+        domain_slots.append(slot.name)
 
     assert expected_intents == domain.intents
+    assert expected_entities == domain.entities
+    assert expected_actions == domain.user_actions
+    assert expected_responses == domain.responses
+    assert expected_forms == domain.forms
+    assert domain.session_config.carry_over_slots == True
+    assert domain.session_config.session_expiration_time == 360
+    assert expected_slots == domain_slots
 
 
 def test_domain_warnings(domain: Domain):
@@ -850,6 +995,9 @@ def test_transform_intents_for_files_with_entities():
     transformed = domain._transform_intents_for_file()
 
     expected = [
+        {"play": {"use_entities": ["ball", "chess"]}},
+        {"stow_away": {"use_entities": True}},
+        {"question": {"use_entities": True}},
         {
             "support_encouraging": {
                 "use_entities": ["anti_freeze_blankets", "automatic_cupcakes"]
@@ -857,18 +1005,9 @@ def test_transform_intents_for_files_with_entities():
         },
         {"certify": {"use_entities": True}},
         {"vacationing": {"ignore_entities": ["tornadoes"]}},
-        {"question": {"use_entities": True}},
-        {"play": {"use_entities": ["ball", "chess"]}},
-        {"stow_away": {"use_entities": True}},
     ]
 
     assert transformed == expected
-
-
-def test_directory_with_conflicting_intent_props():
-    domain_path = "data/test_domains/test_directory_with_conflicting_intent_props"
-    with pytest.raises(InvalidDomain):
-        Domain.load(domain_path)
 
 
 def test_transform_intents_for_file_with_mapping():

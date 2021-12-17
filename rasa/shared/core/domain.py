@@ -315,7 +315,9 @@ class Domain:
     def merge_domain_dicts(
         domain1: Dict, domain2: Dict, override: bool = False
     ) -> Dict[Text, Any]:
-        """Merge this domain with another one, combining their attributes.
+        """Merge this domain dict with another one, combining their attributes.
+        
+        Used when multiple domain files are configured (in a single directory).
 
         List attributes like ``intents`` and ``actions`` will be deduped
         and merged. Single attributes will be taken from `domain1` unless
@@ -348,18 +350,33 @@ class Domain:
         def merge_lists(list1: List[Any], list2: List[Any]) -> List[Any]:
             return sorted(list(set(list1 + list2)))
 
+        def merge_lists_of_dicts(
+            dict_list1: List[Dict],
+            dict_list2: List[Dict],
+            override_existing_values: bool = False,
+        ) -> List[Dict]:
+            dict1 = {
+                (sorted(list(i.keys()))[0] if isinstance(i, dict) else i): i
+                for i in dict_list1
+            }
+            dict2 = {
+                (sorted(list(i.keys()))[0] if isinstance(i, dict) else i): i
+                for i in dict_list2
+            }
+            merged_dicts = merge_dicts(dict1, dict2, override_existing_values)
+            return list(merged_dicts.values())
+
         if override:
             config = domain_dict["config"]
             for key, val in config.items():
                 combined["config"][key] = val
 
-        if override or domain1.get("session_config") == SessionConfig.default():
+        if override or domain2.get("session_config"):
             combined[SESSION_CONFIG_KEY] = domain_dict[SESSION_CONFIG_KEY]
 
-        if combined.get(KEY_INTENTS):
-            combined[KEY_INTENTS].extend(domain_dict[KEY_INTENTS])
-        else:
-            combined[KEY_INTENTS] = domain_dict[KEY_INTENTS]
+        combined[KEY_INTENTS] = merge_lists_of_dicts(
+            combined[KEY_INTENTS], domain_dict[KEY_INTENTS], override
+        )
 
         # remove existing forms from new actions
         for form in combined.get(KEY_FORMS, []):
