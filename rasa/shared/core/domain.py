@@ -316,7 +316,7 @@ class Domain:
         domain1: Dict, domain2: Dict, override: bool = False
     ) -> Dict[Text, Any]:
         """Merge this domain dict with another one, combining their attributes.
-        
+
         Used when multiple domain files are configured (in a single directory).
 
         List attributes like ``intents`` and ``actions`` will be deduped

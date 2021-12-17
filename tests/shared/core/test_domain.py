@@ -822,7 +822,6 @@ def test_domain_from_multiple_files():
     assert expected_actions == domain.user_actions
     assert expected_responses == domain.responses
     assert expected_forms == domain.forms
-    assert domain.session_config.carry_over_slots == True
     assert domain.session_config.session_expiration_time == 360
     assert expected_slots == domain_slots
 
