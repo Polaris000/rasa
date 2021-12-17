@@ -673,6 +673,15 @@ def test_load_domain_from_directory_tree(tmp_path: Path):
     assert set(expected_entities) == (set(actual.entities))
 
 
+def test_domain_from_multiple_files():
+    domain_path = "data/test_domains/test_domain_from_multiple_files"
+    domain = Domain.load(domain_path)
+
+    expected_intents = []
+
+    assert expected_intents == domain.intents
+
+
 def test_domain_warnings(domain: Domain):
     warning_types = [
         "action_warnings",

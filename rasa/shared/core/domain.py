@@ -373,6 +373,7 @@ class Domain:
             combined[key] = merge_dicts(
                 combined.get(key, {}), domain_dict.get(key, {}), override
             )
+
         return combined  # self.__class__.from_dict(combined)
 
     @staticmethod
