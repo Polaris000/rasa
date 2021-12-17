@@ -1,4 +1,4 @@
-DOCS_BASE_URL = "https://rasa.com/docs/rasa"
+DOCS_BASE_URL = "https://rasa.com/docs/rasa/2.x"
 LEGACY_DOCS_BASE_URL = "https://legacy-docs-v1.rasa.com"
 DOCS_URL_TRAINING_DATA = DOCS_BASE_URL + "/training-data-format"
 DOCS_URL_TRAINING_DATA_NLU = DOCS_URL_TRAINING_DATA + "#nlu-training-data"
